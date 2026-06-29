@@ -1,17 +1,9 @@
-from dataclasses import dataclass
+import os
+from dotenv import load_dotenv
 
-@dataclass
-class Config:
-    # Qdrant settings
-    qdrant_host: str = "localhost"
-    qdrant_port: int = 6333
-    qdrant_collection: str = "rag_collection"
-    qdrant_vector_size: int = 384  # depends on embedding model
-    qdrant_distance: str = "Cosine"
-    in_memory: bool = False  # set to True for tests
+load_dotenv()
 
-    # Ollama settings
-    ollama_model: str = "llama3"
-
-    # Embedding model
-    embedding_model: str = "all-MiniLM-L6-v2"
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", None)
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
