@@ -1,6 +1,0 @@
-langchain
-langchain-community
-qdrant-client
-ollama
-python-dotenv
-pytest
