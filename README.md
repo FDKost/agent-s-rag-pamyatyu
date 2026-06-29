@@ -1,86 +1,73 @@
 # RAG Agent with Qdrant and Ollama
 
-This project demonstrates a Retrieval-Augmented Generation (RAG) agent that uses **Qdrant** for vector storage and **Ollama** for embeddings and LLM inference. The agent can index documents, store their embeddings, and answer queries using retrieved context.
+This project implements a Retrieval-Augmented Generation (RAG) agent that uses **Qdrant** for vector storage and **Ollama** for embeddings and LLM inference. The agent can add documents to a knowledge base and answer queries by searching the stored embeddings.
 
-## Prerequisites
+## Features
 
-- Python 3.10+
-- Docker (for running Qdrant locally)
-- Ollama installed locally (or accessible via a remote server)
+- **Qdrant integration** – Stores and retrieves vector embeddings.
+- **Ollama integration** – Generates embeddings and text responses.
+- **RAG memory** – Uses LangChain’s `VectorStoreRetrieverMemory`.
+- **Tools** – `search_knowledge_base` and `add_to_knowledge_base` are exposed as LangChain tools.
+- **Agent factory** – `create_agent()` returns a fully configured LangChain agent.
 
-## Setup
+## Installation
 
-1. **Clone the repository**
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/rag-agent.git
+cd rag-agent
 
-   ```bash
-   git clone https://github.com/yourusername/rag-agent.git
-   cd rag-agent
-   ```
+# Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\\Scripts\\activate
 
-2. **Create a virtual environment and install dependencies**
+# Install dependencies
+pip install -r requirements.txt
+```
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate   # On Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
+## Environment Variables
 
-3. **Configure environment variables**
+Create a `.env` file in the project root (or set the variables in your shell):
 
-   Copy `.env.example` to `.env` and adjust values if necessary.
+```dotenv
+# Qdrant
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+QDRANT_API_KEY=  # leave empty if no key
+QDRANT_COLLECTION=knowledge_base
 
-   ```bash
-   cp .env.example .env
-   ```
+# Ollama
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=llama3
+```
 
-4. **Run Qdrant**
-
-   ```bash
-   docker run -p 6333:6333 qdrant/qdrant
-   ```
-
-5. **Run Ollama**
-
-   ```bash
-   ollama serve
-   ```
-
-   Ensure the model specified in `OLLAMA_MODEL` is available (`llama3` by default).
+Ensure that both Qdrant and Ollama are running locally or adjust the URLs accordingly.
 
 ## Usage
 
-### Index Documents
-
-The sample data is located in `sample_data/`. To index these documents:
+### Adding a Document
 
 ```bash
-python main.py index
+python run_agent.py --add --doc "Your document text here" --meta '{"author":"John"}'
 ```
 
-### Query the Agent
+### Querying the Agent
 
 ```bash
-python main.py query "What is the capital of France?"
+python run_agent.py --query "What is the quick brown fox?"
 ```
 
-The agent will return an answer and the source documents used.
+The agent will automatically use the `search_knowledge_base` tool to retrieve relevant documents and generate an answer.
 
 ## Testing
 
-Run unit tests with:
+Run the tests with:
 
 ```bash
 pytest
 ```
 
-## Project Structure
-
-- `main.py` – CLI entry point.
-- `agent.py` – Core logic for indexing and querying.
-- `utils.py` – Helper functions.
-- `config.py` – Loads environment variables.
-- `sample_data/` – Sample documents for indexing.
-- `tests/` – Unit tests.
+Make sure Qdrant and Ollama are accessible; otherwise, the tests that depend on them will be skipped.
 
 ## License
 

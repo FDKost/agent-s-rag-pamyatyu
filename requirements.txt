@@ -1,6 +1,6 @@
 langchain
 langchain-community
-langchain-text-splitters
 qdrant-client
 ollama
 python-dotenv
+pytest
